@@ -1,0 +1,42 @@
+/*
+    JaCoCo Plugin
+
+    Gradle Website Info:
+    The JaCoCo plugin provides code coverage metrics for Java code via integration with JaCoCo.
+       
+ */
+apply plugin: 'jacoco'
+
+logger.info('Jacoco plugin activated')
+
+jacoco {
+    reportsDir = file( 'build/reports/jacoco')
+}
+
+test {
+    jacoco {
+        append false
+        excludes.add("**/com/${company}/${project.name}/dao/**")
+        excludes.add("**/com/${company}/${project.name}/model/**")
+    }
+}
+
+jacocoTestReport {
+    group = 'reporting'
+    description = 'Generate Jacoco coverage reports after running tests.'
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination file('build/reports/jacoco')
+    }
+    
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(dir: it,
+                    exclude: ["/com/${company}/${project.name}/dao/**",
+                              "/com/${company}/${project.name}/model/**"])
+        })
+    }
+}
+
+build.dependsOn jacocoTestReport

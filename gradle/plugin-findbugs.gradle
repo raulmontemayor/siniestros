@@ -1,0 +1,24 @@
+/*
+    FindBugs Plugin
+
+    Gradle Website Info:
+    Performs quality checks on your project's Java source files using FindBugs and generates reports from these checks.
+*/
+apply plugin: 'findbugs'
+
+findbugs.toolVersion = project.findbugsToolVersion
+
+logger.info("FindBugs Plugin activated - Tool Version ${project.findbugs.toolVersion}")
+
+tasks.withType(FindBugs) {
+    exclude "**/com/${company}/${project.name}/model/**"
+    
+    classes = classes.filter {
+        !it.path.contains("com/${company}/${project.name}/model/") 
+    }
+    reports {
+        xml.enabled false
+        html.enabled true
+    }
+    ignoreFailures = project.findbugsIgnoreFailures
+}

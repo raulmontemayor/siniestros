@@ -1,0 +1,37 @@
+spring:
+  application:
+    name: siniestros
+#  datasource:
+#    type: com.zaxxer.hikari.HikariDataSource
+#    hikari:
+#      jdbc-url: jdbc:postgresql://localhost:5432/afirmeseguros
+#      username: siniestros
+#      password: siniestros
+#      maximum-pool-size: 20
+#      minimum-idle: 10
+  cache:
+    jcache:
+      config: classpath:ehcache.xml
+server:
+    port: 8080
+    undertow:
+        accesslog:
+            enabled: true
+            pattern: "%h %l %u %t \"%r\" %s %b (%D ms)"
+        io-threads: 16
+        worker-threads: 128
+logging:
+  level:
+    ROOT: ERROR
+    org.springframework: INFO
+    com.afirmeseguros: DEBUG
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %highlight(%-5level) %logger{0} %mdc --- %msg%n'
+    file: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %highlight(%-5level) %logger %mdc --- %msg%n'
+  file: logs/application.log
+mybatis:
+  configuration:
+    cacheEnabled: false
+management:
+  security:
+    enabled: false

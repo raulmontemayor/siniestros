@@ -1,0 +1,17 @@
+/*
+    Checkstyle Plugin
+    
+    Gradle Website Info:
+    Performs quality checks on your project's Java source files using Checkstyle and generates reports from these checks.
+     
+ */
+apply plugin: 'checkstyle'
+
+logger.info('Checkstyle Plugin activated')
+
+checkstyle {
+    ignoreFailures = project.checkstyleIgnoreFailures
+    configProperties = [ 'suppressionFile' : project(':').file('config/checkstyle/suppressions.xml')]
+    checkstyleMain.exclude "**/com/${company}/${project.name}/dao/**"
+    checkstyleMain.exclude "**/com/${company}/${project.name}/model/**"
+}
