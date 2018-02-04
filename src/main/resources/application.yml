@@ -26,8 +26,8 @@ logging:
     org.springframework: INFO
     com.afirmeseguros: DEBUG
   pattern:
-    console: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %highlight(%-5level) %logger{0} %mdc --- %msg%n'
-    file: '%d{yyyy-MM-dd HH:mm:ss} [%thread] %highlight(%-5level) %logger %mdc --- %msg%n'
+    console: '%cyan(%d{yyyy-MM-dd HH:mm:ss}) %magenta([%thread]) %highlight(%-5level) %boldWhite(%logger{0}) %green([%mdc]) --- %msg%n'
+    file: '%cyan(%d{yyyy-MM-dd HH:mm:ss}) %magenta([%thread]) %highlight(%-5level) %boldWhite(%logger{0}) %green([%mdc]) --- %msg%n'
   file: logs/application.log
 mybatis:
   configuration:
