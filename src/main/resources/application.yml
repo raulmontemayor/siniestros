@@ -1,25 +1,28 @@
 spring:
   application:
     name: siniestros
-#  datasource:
-#    type: com.zaxxer.hikari.HikariDataSource
-#    hikari:
-#      jdbc-url: jdbc:postgresql://localhost:5432/afirmeseguros
-#      username: siniestros
-#      password: siniestros
-#      maximum-pool-size: 20
-#      minimum-idle: 10
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    continue-on-error: true
+    hikari:
+      jdbc-url: jdbc:oracle:thin:@localhost:49161:xe
+      username: siniestros
+      password: ENC(+vv8G0fWFr/pfFLAcayUyk+PTu66xcEN)
+      maximum-pool-size: 20
+      minimum-idle: 10
+      driver-class-name: oracle.jdbc.driver.OracleDriver
   cache:
     jcache:
       config: classpath:ehcache.xml
+  jackson:
+    date-format: com.fasterxml.jackson.databind.util.ISO8601DateFormat
 server:
     port: 8080
     undertow:
-        accesslog:
-            enabled: true
-            pattern: "%h %l %u %t \"%r\" %s %b (%D ms)"
-        io-threads: 16
-        worker-threads: 128
+      accesslog:
+        enabled: true
+        pattern: common
+        dir: logs/
 logging:
   level:
     ROOT: ERROR
@@ -29,9 +32,15 @@ logging:
     console: '%cyan(%d{yyyy-MM-dd HH:mm:ss}) %magenta([%thread]) %highlight(%-5level) %boldWhite(%logger{0}) %green([%mdc]) --- %msg%n'
     file: '%cyan(%d{yyyy-MM-dd HH:mm:ss}) %magenta([%thread]) %highlight(%-5level) %boldWhite(%logger{0}) %green([%mdc]) --- %msg%n'
   file: logs/application.log
-mybatis:
-  configuration:
-    cacheEnabled: false
-management:
-  security:
-    enabled: false
+jasypt:
+  encryptor:
+    password: afirmeseguros
+---
+ 
+ spring:
+   profiles: integration
+---
+ 
+ spring:
+   profiles: production
+---

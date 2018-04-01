@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xmlns:jsr107='http://www.ehcache.org/v3/jsr107' xmlns='http://www.ehcache.org/v3'
+    xsi:schemaLocation="
+        http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.1.xsd
+        http://www.ehcache.org/v3/jsr107 http://www.ehcache.org/schema/ehcache-107-ext-3.1.xsd">
+
+    <service>
+        <jsr107:defaults default-template="default"/>
+    </service>
+
+    <cache-template name="default">
+        <expiry>
+            <ttl unit="minutes">10</ttl>
+        </expiry>
+        <heap unit="entries">200</heap>
+    </cache-template>
+    
+    
+    <cache-template name="oneDayCache">
+        <expiry>
+            <ttl unit="days">1</ttl>
+        </expiry>
+        <heap unit="entries">1</heap>
+    </cache-template>
+
+</config>

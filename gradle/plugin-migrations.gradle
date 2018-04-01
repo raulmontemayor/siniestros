@@ -1,0 +1,15 @@
+/*
+    MyBatis Migrations Plugin
+
+    Gradle Website Info:
+	https://github.com/marceloemanoel/gradle-migrations-plugin
+
+ */
+
+apply plugin: 'migrations'
+
+logger.info('migrations activated')
+
+dependencies {
+	compile 'com.oracle.jdbc:ojdbc7:12.1.0.2'
+}
