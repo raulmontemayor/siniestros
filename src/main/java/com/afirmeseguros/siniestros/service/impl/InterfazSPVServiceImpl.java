@@ -1,6 +1,8 @@
 package com.afirmeseguros.siniestros.service.impl;
 
 import java.sql.Types;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -116,118 +118,110 @@ public class InterfazSPVServiceImpl implements InterfazSPVService {
 			final SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(dataSource)
 	                .withSchemaName(SCHEMA)
 					.withCatalogName(CATALOG)
-					.withProcedureName("saveReport")
+					.withProcedureName("pAlta_Reporte")
 					.declareParameters(
+						new SqlParameter("pId_Reporte_sin", Types.NUMERIC),
 						new SqlParameter("pNum_Poliza", Types.VARCHAR),
 						new SqlParameter("pId_Lin_Negocio", Types.NUMERIC),
 						new SqlParameter("pId_Inciso", Types.NUMERIC),
-						new SqlParameter("pCve_Estado", Types.NUMERIC),
-						new SqlParameter("pCve_Ciudad", Types.NUMERIC),
-						new SqlParameter("pUbicacion", Types.NUMERIC),
-						new SqlParameter("pColonia", Types.NUMERIC),
-						new SqlParameter("pTx_Siniestro", Types.NUMERIC),
-                        new SqlParameter("pNom_Reporta", Types.NUMERIC),
-                        new SqlParameter("pNom_Conductor", Types.NUMERIC),
+						new SqlParameter("pCve_Estado", Types.VARCHAR),
+						new SqlParameter("pCve_Ciudad", Types.VARCHAR),
+						new SqlParameter("pUbicacion", Types.VARCHAR),
+						new SqlParameter("pColonia", Types.VARCHAR),
+						new SqlParameter("pTx_Siniestro", Types.VARCHAR),
+                        new SqlParameter("pNom_Reporta", Types.VARCHAR),
+                        new SqlParameter("pNom_Conductor", Types.VARCHAR),
                         new SqlParameter("pEdad_Cond", Types.NUMERIC),
-                        new SqlParameter("pcve_Sexo_Cond", Types.NUMERIC),
-                        new SqlParameter("pid_giro_ocup", Types.NUMERIC),
-                        new SqlParameter("pNum_lic_cond", Types.NUMERIC),
-                        new SqlParameter("pcvel_t_lic_cond", Types.NUMERIC),
-                        new SqlParameter("pf_venc_lic_cond", Types.NUMERIC),
-                        new SqlParameter("pid_taller_asig", Types.NUMERIC),
-                        new SqlParameter("pCodigo_Postal", Types.NUMERIC),
+                        new SqlParameter("pcve_Sexo_Cond", Types.VARCHAR),
+                        new SqlParameter("pid_giro_ocup", Types.VARCHAR),
+                        new SqlParameter("pNum_lic_cond", Types.VARCHAR),
+                        new SqlParameter("pcvel_t_lic_cond", Types.VARCHAR),
+                        new SqlParameter("pf_venc_lic_cond", Types.DATE),
+                        new SqlParameter("pid_taller_asig", Types.VARCHAR),
+                        new SqlParameter("pCodigo_Postal", Types.VARCHAR),
                         new SqlParameter("pid_colonia", Types.NUMERIC),
-                        new SqlParameter("pTelefs_Reporta", Types.NUMERIC),
-                        new SqlParameter("pCve_Usuario", Types.NUMERIC),
+                        new SqlParameter("pTelefs_Reporta", Types.VARCHAR),
+                        new SqlParameter("pCve_Usuario", Types.VARCHAR),
                         new SqlParameter("pid_ajustador", Types.NUMERIC),
-                        new SqlParameter("pFH_Reportado", Types.NUMERIC),
-                        new SqlParameter("pFH_Ocurrido", Types.NUMERIC),
-                        new SqlParameter("pFH_Asignacion", Types.NUMERIC),
-                        new SqlParameter("pFH_Cita", Types.NUMERIC),
-                        new SqlParameter("pFH_Contacto", Types.NUMERIC),
-                        new SqlParameter("pFH_Terminacion", Types.NUMERIC),
-                        new SqlParameter("pB_Cia_Respon", Types.NUMERIC),
-                        new SqlParameter("pId_Cia_Aseg_Resp", Types.NUMERIC),
-                        new SqlParameter("pId_Causa_Sin", Types.NUMERIC),
-                        new SqlParameter("pCveL_Lugar_Ajust", Types.NUMERIC),
-                        new SqlParameter("pCveL_T_Resp", Types.NUMERIC),
-                        new SqlParameter("pCve_Term_Ajust", Types.NUMERIC),
-                        new SqlParameter("pB_Fuga_Terc_Resp", Types.NUMERIC),
-                        new SqlParameter("pcve_t_perdida", Types.NUMERIC),
-                        new SqlParameter("pPlaca", Types.NUMERIC),
-                        new SqlParameter("pEstimacionInf", Types.NUMERIC),
-                        new SqlParameter("pPlacaAjusta", Types.NUMERIC),
+                        new SqlParameter("pFH_Reportado", Types.DATE),
+                        new SqlParameter("pFH_Ocurrido", Types.DATE),
+                        new SqlParameter("pFH_Asignacion", Types.DATE),
+                        new SqlParameter("pFH_Cita", Types.DATE),
+                        new SqlParameter("pFH_Contacto", Types.DATE),
+                        new SqlParameter("pFH_Terminacion", Types.DATE),
+                        new SqlParameter("pB_Cia_Respon", Types.VARCHAR),
+                        new SqlParameter("pId_Cia_Aseg_Resp", Types.VARCHAR),
+                        new SqlParameter("pId_Causa_Sin", Types.VARCHAR),
+                        new SqlParameter("pCveL_Lugar_Ajust", Types.VARCHAR),
+                        new SqlParameter("pCveL_T_Resp", Types.VARCHAR),
+                        new SqlParameter("pCve_Term_Ajust", Types.VARCHAR),
+                        new SqlParameter("pB_Fuga_Terc_Resp", Types.VARCHAR),
+                        new SqlParameter("pcve_t_perdida", Types.VARCHAR),
+                        new SqlParameter("pPlaca", Types.VARCHAR),
+                        new SqlParameter("pEstimacionInf", Types.VARCHAR),
+                        new SqlParameter("pPlacaAjusta", Types.VARCHAR),
                         new SqlParameter("pId_Cod_Resp", Types.NUMERIC),
-                        new SqlParameter("pDesc_Codigo", Types.NUMERIC))
+                        new SqlParameter("pDesc_Codigo", Types.VARCHAR))
 	                .returningResultSet("p_result_cursor",
 	                        new BeanPropertyRowMapper<PolicyResponse>(PolicyResponse.class));
 			
 			final SqlParameterSource parameter = new MapSqlParameterSource()
+					.addValue("pId_Reporte_sin", null)
 					.addValue("pNum_Poliza", report.getPolicy())
 					.addValue("pId_Lin_Negocio", 1) //TODO default
-					.addValue("pId_Inciso", report.getIndent())// TODO validar si se puede usar report.getPolicyNumber()
-					.addValue("pCve_Estado", report.getAttentionInsuredVehicle().getVehicle().getDriver().getAddress().getState())
-					.addValue("pCve_Ciudad", report.getAttentionInsuredVehicle().getVehicle().getDriver().getAddress().getCity())
-					.addValue("pUbicacion", report.getAttentionInsuredVehicle().getVehicle().getDriver().getAddress().getStreet() 
-							+ " " + report.getAttentionInsuredVehicle().getVehicle().getDriver().getAddress().getExteriorNumber())
-					.addValue("pColonia", report.getAttentionInsuredVehicle().getVehicle().getDriver().getAddress().getColony())
-					.addValue("pTx_Siniestro", report.getAttentionStatement().getVehicleData().geto)
-		            .addValue("pNom_Reporta", "")
-		            .addValue("pNom_Conductor", "")
-		            .addValue("pEdad_Cond", "")
-		            .addValue("pcve_Sexo_Cond", "")
-		            .addValue("pid_giro_ocup", "")
-		            .addValue("pNum_lic_cond", "")
-		            .addValue("pcvel_t_lic_cond", "")
-		            .addValue("pf_venc_lic_cond", "")
-		            .addValue("pid_taller_asig", "")
-		            .addValue("pCodigo_Postal", "")
-		            .addValue("pid_colonia", "")
-		            .addValue("pTelefs_Reporta", "")
-		            .addValue("pCve_Usuario", "")
-		            .addValue("pid_ajustador", "")
-		            .addValue("pFH_Reportado", "")
-		            .addValue("pFH_Ocurrido", "")
-		            .addValue("pFH_Asignacion", "")
-		            .addValue("pFH_Cita", "")
-		            .addValue("pFH_Contacto", "")
-		            .addValue("pFH_Terminacion", "")
-		            .addValue("pB_Cia_Respon", "")
-		            .addValue("pId_Cia_Aseg_Resp", "")
-		            .addValue("pId_Causa_Sin", "")
-		            .addValue("pCveL_Lugar_Ajust", "")
-		            .addValue("pCveL_T_Resp", "")
-		            .addValue("pCve_Term_Ajust", "")
-		            .addValue("pB_Fuga_Terc_Resp", "")
-		            .addValue("pcve_t_perdida", "")
-		            .addValue("pPlaca", "")
-		            .addValue("pEstimacionInf", "")
-		            .addValue("pPlacaAjusta", "")
-		            .addValue("pId_Cod_Resp", "")
-		            .addValue("pDesc_Codigo", "");
+					.addValue("pId_Inciso", report.getPolicyNumber())// TODO validar si se puede usar report.getPolicyNumber()
+					.addValue("pCve_Estado", report.getAddress().getState())
+					.addValue("pCve_Ciudad", report.getAddress().getCity())
+					.addValue("pUbicacion", report.getAddress().getStreet() 
+							+ " " + report.getAddress().getExteriorNumber())
+					.addValue("pColonia", report.getAddress().getColony())
+					.addValue("pTx_Siniestro", report.getAttentionStatement().getStatementDescription() + "\n" + report.getAttentionStatement().getObservations())
+		            .addValue("pNom_Reporta", report.getReportPersonName() + " " + report.getReportPersonLastName() + " " + report.getReportPersonMotherLastName())
+		            .addValue("pNom_Conductor", report.getAttentionClaimData().getDriverName())
+		            .addValue("pEdad_Cond", getAge(report.getAttentionInsuredVehicle().getVehicle().getDriver().getPerson().getBirthDate()))
+		            .addValue("pcve_Sexo_Cond", report.getAttentionInsuredVehicle().getVehicle().getDriver().getPerson().getGender())
+		            .addValue("pid_giro_ocup", null)
+		            .addValue("pNum_lic_cond", null)
+		            .addValue("pcvel_t_lic_cond", null)
+		            .addValue("pf_venc_lic_cond", null)
+		            .addValue("pid_taller_asig", null) //TODO "service_type": "repaircenterservice"
+		            .addValue("pCodigo_Postal", report.getAddress().getZipCode())
+		            .addValue("pid_colonia", null)
+		            .addValue("pTelefs_Reporta", report.getReportPersonPhone())
+		            .addValue("pCve_Usuario", "SPVCABIN") //TODO catalogo
+		            .addValue("pid_ajustador", 1122) //TODO catalogo
+		            .addValue("pFH_Reportado", report.getDateCreation())
+		            .addValue("pFH_Ocurrido", report.getAttentionTheftData().getRobberyDate() == null 
+		            	? report.getDateCreation(): report.getAttentionTheftData().getRobberyDate())
+		            .addValue("pFH_Asignacion", report.getDateCreation()) //TODO 
+		            .addValue("pFH_Cita", null) //TODO report.getAttentionServices().get(0).getAppointment().getDateTime()
+		            .addValue("pFH_Contacto", report.getAttentionDate())
+		            .addValue("pFH_Terminacion", new Date()) //TODO revisar
+		            .addValue("pB_Cia_Respon", "F")//TODO participó compañia de seguros S o N
+		            .addValue("pId_Cia_Aseg_Resp", null)//TODO report.getAttentionThirdAutos().get(0).getThirdAutoInsuranceData().getInsuranceCompany()
+		            .addValue("pId_Causa_Sin", 277)//TODO causa del siniestro de donde lo saco?
+		            .addValue("pCveL_Lugar_Ajust", "TRAN") //TODO CITA VIST TRAN CRUC
+		            .addValue("pCveL_T_Resp", "RESP") //TODO RESP AFCT
+		            .addValue("pCve_Term_Ajust", "CE") //TODO diferente si es afectado o responsable CE EONA ROC LEGA NOLOC CANC RECH DUPLI TRAN PEN  O EOT EOC EOAT EOAC
+		            .addValue("pB_Fuga_Terc_Resp", "F") //TODO responsable se dio a la fuga?
+		            .addValue("pcve_t_perdida", "P")//TODO P o T total o parcial
+		            .addValue("pPlaca", report.getAttentionStatement().getVehicleData().getPlates()) //TODO placas que dio por telefono
+		            .addValue("pEstimacionInf", null) //TODO Estimacion inicial
+		            .addValue("pPlacaAjusta", report.getAttentionStatement().getVehicleData().getPlates());
 			final List<PolicyResponse> lstCallResponse =  (List<PolicyResponse>) simpleJdbcCall.execute(parameter).get("pCursor");
-			if (CollectionUtils.isEmpty(lstCallResponse)) {
-				throw new ResourceNotFoundException();
-			} else {
-				SimpleJdbcCall simpleJdbcCall2 = new SimpleJdbcCall(dataSource)
-		                .withSchemaName(SCHEMA)
-						.withCatalogName(CATALOG)
-						.withProcedureName("get_coverage")
-						.declareParameters(
-							new SqlParameter("pPolicyNumber", Types.VARCHAR),
-							new SqlParameter("pInciso", Types.NUMERIC))
-		                .returningResultSet("pCursor",
-		                        new BeanPropertyRowMapper<Coverage>(Coverage.class));
-				List<Coverage> lstCoverage = (List<Coverage>) simpleJdbcCall2.execute(parameter).get("pCursor");
-				lstCallResponse.get(0).setPolicyCoverages(lstCoverage);
-				return lstCallResponse.get(0);
-			}
+
 		} catch (ResourceNotFoundException e) {
 			throw e;
 		} catch (Exception e) {
 			LOG.error("-- getPolicy()", e);
 			throw new GenericException(e.getMessage());	
 		}
+	}
+
+	private long getAge(Date birthDate) {
+		LocalDate localBirthDate = birthDate.toLocalDate();
+		long years = ChronoUnit.YEARS.between(localBirthDate, LocalDate.now());
+		return years;
 	}
 
 	private String saveLog(Report report) {

@@ -51,8 +51,8 @@ public class InterfazSPVController {
 			MDC.put("poliza", report.getPolicy());
 			MDC.put("reportId", report.getId());
 			LOG.debug("--processReport() \n{}", report);
-			if (report.getIndent() == null) {
-				report.setIndent(1);
+			if (report.getPolicyNumber() == null) {
+				report.setPolicyNumber("1");
 			}  
 			return interfazSPVService.processReport(report); 
 		} finally {
